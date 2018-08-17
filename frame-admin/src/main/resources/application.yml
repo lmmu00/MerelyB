@@ -1,0 +1,11 @@
+spring:
+    thymeleaf:
+        prefix: classpath:/templates/
+        suffix: .html
+        cache: false
+        encoding: utf-8
+        servlet:
+            content-type: text/html
+        check-template-location: true
+server:
+    port: 8080

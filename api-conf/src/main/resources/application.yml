@@ -1,0 +1,17 @@
+database:
+    dataType: 0
+    connection: jdbc:mysql://127.0.0.1:3306/database_conf?useUnicode=true&characterEncoding=UTF8&serverTimezone=Asia/Shanghai
+    verification:
+        uName: user
+        uValue: root
+        pName: password
+        pValue: liming5258
+spring:
+    thymeleaf:
+        prefix: classpath:/templates/
+        suffix: .html
+        cache: false
+        encoding: utf-8
+        servlet:
+            content-type: text/html
+        check-template-location: true
