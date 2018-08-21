@@ -1,10 +1,7 @@
 package com.merelyb.face.face;
 
 import com.merelyb.bean.ResultBean;
-import com.merelyb.bean.face.BasePara;
-import com.merelyb.bean.face.PlateLicense;
-import com.merelyb.bean.face.PlateLicenseResult;
-import com.merelyb.bean.face.PlateLicenseReturn;
+import com.merelyb.bean.face.*;
 import com.merelyb.constant.CodeConstant;
 import com.merelyb.constant.ResultConstant;
 import com.merelyb.utils.CommonUtils;
@@ -19,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,97 @@ public class FaceAddController {
     private String apiSecret = "hI4fH210IDiHPROU7PMHo-OJ4rh0kIdv";
 
     private Logger logger = LogManager.getLogger(this.getClass());
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    /**
+     * 获取车牌信息
+     *
+     * @param strData
+     * @param resultBean
+     */
+    private void getPlateLicenseInfo(String strData, ResultBean resultBean) {
+        PlateLicenseResult plateLicenseResult = JsonUtils.json2Obj(strData, PlateLicenseResult.class);
+        if (plateLicenseResult.getError_message() != null) {
+            resultBean.setStatus(false);
+            resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_PLATELICENSEINFO);
+            resultBean.setData("");
+            resultBean.setMsg(plateLicenseResult.getError_message());
+        } else {
+            if (plateLicenseResult.getResults().size() > 0) {
+                List<PlateLicenseReturn> plateLicenseReturnList = new ArrayList<>();
+                for (int i = 0; i < plateLicenseResult.getResults().size(); i++) {
+                    PlateLicense plateLicense = plateLicenseResult.getResults().get(i);
+                    PlateLicenseReturn plateLicenseReturn = new PlateLicenseReturn();
+                    plateLicenseReturn.setPlateLicenseColor(plateLicense.getColor());
+                    plateLicenseReturn.setPlateLicenseNum(plateLicense.getLicense_plate_number());
+                    plateLicenseReturn.setPlateLicenseLoc("(" + String.valueOf(plateLicense.getBound().getLeft_top().getX()) + ", "
+                            + String.valueOf(plateLicense.getBound().getLeft_top().getY()) + ")"
+                            + "(" + String.valueOf(plateLicense.getBound().getRight_top().getX()) + ", "
+                            + String.valueOf(plateLicense.getBound().getRight_top().getY()) + ")"
+                            + "(" + String.valueOf(plateLicense.getBound().getRight_bottom().getX()) + ", "
+                            + String.valueOf(plateLicense.getBound().getRight_bottom().getY()) + ")"
+                            + "(" + String.valueOf(plateLicense.getBound().getLeft_bottom().getX()) + ", "
+                            + String.valueOf(plateLicense.getBound().getLeft_bottom().getY()) + ")");
+                    plateLicenseReturnList.add(plateLicenseReturn);
+                }
+                resultBean.setStatus(true);
+                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_PLATELICENSEINFO);
+                resultBean.setData(JsonUtils.objs2Json(plateLicenseReturnList));
+                resultBean.setMsg(ResultConstant.MSG_COMMON_SUCCESS);
+            } else {
+                resultBean.setStatus(false);
+                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_PLATELICENSEINFO);
+                resultBean.setData("");
+                resultBean.setMsg(ResultConstant.MSG_COMMON_QUERY_NO_DATA);
+            }
+        }
+    }
+
+    /**
+     * 获取身份证信息
+     * @param strData
+     * @param resultBean
+     * @throws ParseException
+     */
+    private void getIDCardInfo(String strData, ResultBean resultBean) throws ParseException {
+        String sFormatData = strData.replaceAll("Temporary ID Photo", "Temporary_ID_Photo")
+                .replaceAll("ID Photo", "ID_Photo");
+        IDCardResult idCardResult = JsonUtils.json2Obj(sFormatData, IDCardResult.class);
+        if (idCardResult.getError_message() != null) {
+            resultBean.setStatus(false);
+            resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_IDCARDINFO);
+            resultBean.setData("");
+            resultBean.setMsg(idCardResult.getError_message());
+        } else {
+            if (idCardResult.getCards().size() > 0) {
+                List<IDCardReturn> idCardReturnList = new ArrayList<>();
+                for (int i = 0; i < idCardResult.getCards().size(); i++) {
+                    IDCardInfo idCardInfo = idCardResult.getCards().get(i);
+                    IDCardReturn idCardReturn = new IDCardReturn();
+                    idCardReturn.setName(idCardInfo.getName());
+                    idCardReturn.setSex(idCardInfo.getGender().equals("男") ? 0 : 1);
+                    idCardReturn.setNation(idCardInfo.getRace());
+                    idCardReturn.setBirth(simpleDateFormat.parse(idCardInfo.getBirthday()));
+                    idCardReturn.setAddress(idCardInfo.getAddress());
+                    idCardReturn.setCardNum(idCardInfo.getId_card_number());
+                    idCardReturn.setOffice(idCardInfo.getIssued_by());
+                    idCardReturn.setEffective(idCardInfo.getValid_date());
+                    idCardReturnList.add(idCardReturn);
+                }
+                resultBean.setStatus(true);
+                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_IDCARDINFO);
+                resultBean.setData(JsonUtils.objs2Json(idCardReturnList));
+                resultBean.setMsg(ResultConstant.MSG_COMMON_SUCCESS);
+            } else {
+                resultBean.setStatus(false);
+                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_IDCARDINFO);
+                resultBean.setData("");
+                resultBean.setMsg(ResultConstant.MSG_COMMON_QUERY_NO_DATA);
+            }
+        }
+    }
+
 
     @RequestMapping(method = RequestMethod.POST, value = "getImageInfo")
     @ResponseBody
@@ -66,6 +156,10 @@ public class FaceAddController {
                 sUrl = "https://api-cn.faceplusplus.com/imagepp/v1/licenseplate";
                 break;
             }
+            case 1: {
+                sUrl = "https://api-cn.faceplusplus.com/cardpp/v1/ocridcard";
+                break;
+            }
 
         }
         BasePara basePara = new BasePara();
@@ -78,6 +172,9 @@ public class FaceAddController {
         try {
             Map<String, Object> mapPara = null;
             mapPara = commonUtils.objectToMap(basePara);
+            if(Integer.parseInt(sType) == 1){
+                mapPara.put("legality", 1);
+            }
             if (mapPara == null) {
                 resultBean.setStatus(false);
                 resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_INFOBYIMAGE);
@@ -91,41 +188,11 @@ public class FaceAddController {
             if (httpClientResult.isSuccessed()) {
                 switch (Integer.parseInt(sType)) {
                     case 0: {
-                        PlateLicenseResult plateLicenseResult = JsonUtils.json2Obj(httpClientResult.getData(), PlateLicenseResult.class);
-                        if (plateLicenseResult.getError_message() != null) {
-                            resultBean.setStatus(false);
-                            resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_INFOBYIMAGE);
-                            resultBean.setData("");
-                            resultBean.setMsg(plateLicenseResult.getError_message());
-                        } else {
-                            if (plateLicenseResult.getResults().size() > 0) {
-                                List<PlateLicenseReturn> plateLicenseReturnList = new ArrayList<>();
-                                for (int i = 0; i < plateLicenseResult.getResults().size(); i++) {
-                                    PlateLicense plateLicense = plateLicenseResult.getResults().get(i);
-                                    PlateLicenseReturn plateLicenseReturn = new PlateLicenseReturn();
-                                    plateLicenseReturn.setPlateLicenseColor(plateLicense.getColor());
-                                    plateLicenseReturn.setPlateLicenseNum(plateLicense.getLicense_plate_number());
-                                    plateLicenseReturn.setPlateLicenseLoc("(" + String.valueOf(plateLicense.getBound().getLeft_top().getX()) + ", "
-                                            + String.valueOf(plateLicense.getBound().getLeft_top().getY()) + ")"
-                                            + "(" + String.valueOf(plateLicense.getBound().getRight_top().getX()) + ", "
-                                            + String.valueOf(plateLicense.getBound().getRight_top().getY()) + ")"
-                                            + "(" + String.valueOf(plateLicense.getBound().getRight_bottom().getX()) + ", "
-                                            + String.valueOf(plateLicense.getBound().getRight_bottom().getY()) + ")"
-                                            + "(" + String.valueOf(plateLicense.getBound().getLeft_bottom().getX()) + ", "
-                                            + String.valueOf(plateLicense.getBound().getLeft_bottom().getY()) + ")");
-                                    plateLicenseReturnList.add(plateLicenseReturn);
-                                }
-                                resultBean.setStatus(true);
-                                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_INFOBYIMAGE);
-                                resultBean.setData(JsonUtils.objs2Json(plateLicenseReturnList));
-                                resultBean.setMsg(ResultConstant.MSG_COMMON_SUCCESS);
-                            } else {
-                                resultBean.setStatus(false);
-                                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_INFOBYIMAGE);
-                                resultBean.setData("");
-                                resultBean.setMsg(ResultConstant.MSG_COMMON_QUERY_NO_DATA);
-                            }
-                        }
+                        getPlateLicenseInfo(httpClientResult.getData(), resultBean);
+                        break;
+                    }
+                    case 1: {
+                        getIDCardInfo(httpClientResult.getData(), resultBean);
                         break;
                     }
                 }

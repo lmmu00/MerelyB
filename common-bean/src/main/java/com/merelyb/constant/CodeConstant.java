@@ -25,4 +25,6 @@ public class CodeConstant {
     public final static String CODE_ACCOUNT_ADDACC = "0002";
     public final static String CODE_ACCOUNT_LOGIN = "0003";
     public final static String CODE_FACE_INFOBYIMAGE = "0004";
+    public final static String CODE_FACE_PLATELICENSEINFO = "0005";
+    public final static String CODE_FACE_IDCARDINFO = "0006";
 }
