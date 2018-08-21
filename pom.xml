@@ -11,9 +11,9 @@
         <module>common-utils</module>
         <module>common-bean</module>
         <module>api-account</module>
-        <module>frame-admin</module>
         <module>api-video</module>
         <module>common-service</module>
+        <module>api-face</module>
     </modules>
     <packaging>pom</packaging>
 
