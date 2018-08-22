@@ -27,4 +27,5 @@ public class CodeConstant {
     public final static String CODE_FACE_INFOBYIMAGE = "0004";
     public final static String CODE_FACE_PLATELICENSEINFO = "0005";
     public final static String CODE_FACE_IDCARDINFO = "0006";
+    public final static String CODE_FACE_DRIVERLICENSEINFO = "0007";
 }

@@ -130,7 +130,59 @@ public class FaceAddController {
         }
     }
 
+    /**
+     * 驾照信息
+     * @param strData
+     * @param resultBean
+     * @throws Exception
+     */
+    private void getDriverLicenseInfo(String strData, ResultBean resultBean) throws Exception {
+        String sFormatData = strData.replaceAll("class", "carType");
+        DriverLicenseResult driverLicenseResult = JsonUtils.json2Obj(sFormatData, DriverLicenseResult.class);
+        if(driverLicenseResult.getError_message() != null){
+            resultBean.setStatus(false);
+            resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_DRIVERLICENSEINFO);
+            resultBean.setData("");
+            resultBean.setMsg(driverLicenseResult.getError_message());
+        }else {
+            if(driverLicenseResult.getCards().size() > 0){
+                List<DriverLicenseReturn> driverLicenseReturnList = new ArrayList<>();
+                for (int i = 0; i < driverLicenseResult.getCards().size(); i++) {
+                    DriverLicenseInfo driverLicenseInfo = driverLicenseResult.getCards().get(i);
+                    DriverLicenseReturn driverLicenseReturn = new DriverLicenseReturn();
+                    driverLicenseReturn.setAddress(driverLicenseInfo.getAddress());
+                    driverLicenseReturn.setBirthday(simpleDateFormat.parse(driverLicenseInfo.getBirthday()));
+                    driverLicenseReturn.setCarType(driverLicenseInfo.getCarType());
+                    driverLicenseReturn.setCountry(driverLicenseInfo.getNationality());
+                    driverLicenseReturn.setDlNum(driverLicenseInfo.getLicense_number());
+                    driverLicenseReturn.setEffectiveNum(driverLicenseInfo.getValid_for());
+                    driverLicenseReturn.setEffectiveStart(simpleDateFormat.parse(driverLicenseInfo.getValid_from()));
+                    driverLicenseReturn.setEffectiveTime(driverLicenseInfo.getValid_date());
+                    driverLicenseReturn.setFirstCheck(simpleDateFormat.parse(driverLicenseInfo.getIssue_date()));
+                    driverLicenseReturn.setName(driverLicenseInfo.getName());
+                    driverLicenseReturn.setOffice(driverLicenseInfo.getIssued_by());
+                    driverLicenseReturn.setSex(driverLicenseInfo.getGender().equals("男")?0:1);
+                    driverLicenseReturn.setVersion(driverLicenseInfo.getVersion());
+                    driverLicenseReturnList.add(driverLicenseReturn);
+                }
+                resultBean.setStatus(true);
+                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_DRIVERLICENSEINFO);
+                resultBean.setData(JsonUtils.objs2Json(driverLicenseReturnList));
+                resultBean.setMsg(ResultConstant.MSG_COMMON_SUCCESS);
+            }else{
+                resultBean.setStatus(false);
+                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_DRIVERLICENSEINFO);
+                resultBean.setData("");
+                resultBean.setMsg(ResultConstant.MSG_COMMON_QUERY_NO_DATA);
+            }
+        }
+    }
 
+    /**
+     * 识别图片信息
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "getImageInfo")
     @ResponseBody
     public ResultBean getInfoByImage(HttpServletRequest request) {
@@ -158,6 +210,10 @@ public class FaceAddController {
             }
             case 1: {
                 sUrl = "https://api-cn.faceplusplus.com/cardpp/v1/ocridcard";
+                break;
+            }
+            case 2:{
+                sUrl = "https://api-cn.faceplusplus.com/cardpp/v1/ocrdriverlicense";
                 break;
             }
 
@@ -193,6 +249,10 @@ public class FaceAddController {
                     }
                     case 1: {
                         getIDCardInfo(httpClientResult.getData(), resultBean);
+                        break;
+                    }
+                    case 2: {
+                        getDriverLicenseInfo(httpClientResult.getData(), resultBean);
                         break;
                     }
                 }
