@@ -179,6 +179,50 @@ public class FaceAddController {
     }
 
     /**
+     * 银行卡图片识别
+     * @param strData
+     * @param resultBean
+     */
+    private void getBankCardInfo(String strData, ResultBean resultBean){
+        BankCardResult bankCardResult = JsonUtils.json2Obj(strData, BankCardResult.class);
+        if(bankCardResult.getError_message() != null){
+            resultBean.setStatus(false);
+            resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_BANKCARDINGO);
+            resultBean.setData("");
+            resultBean.setMsg(bankCardResult.getError_message());
+        }else {
+            if(bankCardResult.getBank_cards().size() > 0){
+                List<BankCardReturn> bankCardReturnList = new ArrayList<>();
+                for (int i = 0; i < bankCardResult.getBank_cards().size(); i++) {
+                    BankCard bankCard = bankCardResult.getBank_cards().get(i);
+                    BankCardReturn bankCardReturn = new BankCardReturn();
+                    bankCardReturn.setBankName(bankCard.getBank());
+                    bankCardReturn.setBrand(JsonUtils.objs2Json(bankCard.getOrganization()));
+                    bankCardReturn.setCardNO(bankCard.getNumber());
+                    bankCardReturn.setRect("(" + String.valueOf(bankCard.getBound().getLeft_top().getX()) + ", "
+                            + String.valueOf(bankCard.getBound().getLeft_top().getY()) + ")"
+                            + "(" + String.valueOf(bankCard.getBound().getRight_top().getX()) + ", "
+                            + String.valueOf(bankCard.getBound().getRight_top().getY()) + ")"
+                            + "(" + String.valueOf(bankCard.getBound().getRight_bottom().getX()) + ", "
+                            + String.valueOf(bankCard.getBound().getRight_bottom().getY()) + ")"
+                            + "(" + String.valueOf(bankCard.getBound().getLeft_bottom().getX()) + ", "
+                            + String.valueOf(bankCard.getBound().getLeft_bottom().getY()) + ")");
+                    bankCardReturnList.add(bankCardReturn);
+                }
+                resultBean.setStatus(true);
+                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_BANKCARDINGO);
+                resultBean.setData(JsonUtils.objs2Json(bankCardReturnList));
+                resultBean.setMsg(ResultConstant.MSG_COMMON_SUCCESS);
+            }else {
+                resultBean.setStatus(false);
+                resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_BANKCARDINGO);
+                resultBean.setData("");
+                resultBean.setMsg(ResultConstant.MSG_COMMON_QUERY_NO_DATA);
+            }
+        }
+    }
+
+    /**
      * 识别图片信息
      * @param request
      * @return
@@ -212,8 +256,12 @@ public class FaceAddController {
                 sUrl = "https://api-cn.faceplusplus.com/cardpp/v1/ocridcard";
                 break;
             }
-            case 2:{
+            case 2: {
                 sUrl = "https://api-cn.faceplusplus.com/cardpp/v1/ocrdriverlicense";
+                break;
+            }
+            case 3: {
+                sUrl = "https://api-cn.faceplusplus.com/cardpp/v1/ocrbankcard";
                 break;
             }
 
@@ -253,6 +301,10 @@ public class FaceAddController {
                     }
                     case 2: {
                         getDriverLicenseInfo(httpClientResult.getData(), resultBean);
+                        break;
+                    }
+                    case 3: {
+                        getBankCardInfo(httpClientResult.getData(), resultBean);
                         break;
                     }
                 }
