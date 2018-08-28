@@ -7,6 +7,7 @@ import com.merelyb.constant.CodeConstant;
 import com.merelyb.constant.RequestConstant;
 import com.merelyb.constant.ResultConstant;
 import com.merelyb.data.DataBaseOperation;
+import com.merelyb.utils.database.RedisUtils;
 import com.merelyb.utils.json.JsonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,8 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import redis.clients.jedis.JedisShardInfo;
+import redis.clients.jedis.ShardedJedis;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,6 +91,15 @@ public class ConfInfoController {
     @RequestMapping(method = RequestMethod.POST, value = "/getNeedSQL")
     @ResponseBody
     public ResultBean getNeedSQL(HttpServletRequest request) {
+        JedisShardInfo shardInfo =new JedisShardInfo("47.52.137.77", 6379);
+        shardInfo.setPassword("liming5258");
+        List<JedisShardInfo> shardInfos = new ArrayList<>();
+        shardInfos.add(shardInfo);
+        RedisUtils redisUtils = new RedisUtils(shardInfos);
+        redisUtils.add("test", "test");
+        System.out.println(redisUtils.get("test", String.class));
+        redisUtils.destroy();
+
         String sCode = request.getParameter("") != null ? request.getParameter("").toString() : "";
         return new ResultBean();
     }
