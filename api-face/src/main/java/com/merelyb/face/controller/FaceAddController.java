@@ -1,4 +1,4 @@
-package com.merelyb.face.face;
+package com.merelyb.face.controller;
 
 import com.merelyb.bean.ResultBean;
 import com.merelyb.bean.face.*;

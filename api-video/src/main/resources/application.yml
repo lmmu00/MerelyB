@@ -1,0 +1,15 @@
+#spring:
+#    thymeleaf:
+#        prefix: classpath:/templates/
+#        suffix: .html
+#        cache: false
+#        encoding: utf-8
+#        servlet:
+#            content-type: text/html
+#        check-template-location: true
+logging:
+  config: classpath:log4j2.yml
+upload:
+  win: D:\SourceCode\JAVA\Merelyb
+  liu: usr/local/
+  cur: 0

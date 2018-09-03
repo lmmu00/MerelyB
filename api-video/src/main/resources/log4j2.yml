@@ -185,3 +185,5 @@ Configuration:
                 level: ALL
             -   name: com.merelyb.face.controller.FaceAddController
                 level: ALL
+            -   name: com.merelyb.video.controller.VideoOperationController
+                level: ALL
