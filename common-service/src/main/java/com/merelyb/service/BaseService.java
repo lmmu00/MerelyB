@@ -1,7 +1,7 @@
 package com.merelyb.service;
 
 import com.google.gson.reflect.TypeToken;
-import com.merelyb.bean.DataConf;
+import com.merelyb.bean.dataConf.DataConf;
 import com.merelyb.bean.PageBean;
 import com.merelyb.bean.ResultBean;
 import com.merelyb.constant.UrlContant;
@@ -11,8 +11,6 @@ import com.merelyb.utils.json.JsonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import java.util.List;
 

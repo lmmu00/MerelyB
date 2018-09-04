@@ -4,11 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-import com.merelyb.bean.DataConf;
+import com.merelyb.bean.dataConf.DataConf;
 import com.merelyb.utils.database.JDBCUtils;
-import com.merelyb.utils.json.JsonUtils;
-import javafx.scene.control.TableFocusModel;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

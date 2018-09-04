@@ -1,7 +1,7 @@
 package com.merelyb.service.acc;
 
-import com.merelyb.bean.AccInfo;
-import com.merelyb.bean.DataConf;
+import com.merelyb.bean.acc.AccInfo;
+import com.merelyb.bean.dataConf.DataConf;
 import com.merelyb.bean.PageBean;
 import com.merelyb.constant.DataBaseConstant;
 import com.merelyb.data.DataBaseOperation;
@@ -29,7 +29,7 @@ public class AccountInfoService extends BaseService<AccInfo> {
     private Logger logger = LogManager.getLogger(this.getClass());
 
     public AccountInfoService() throws Exception {
-        DataConf dataConf = initService(DataBaseConstant.DB_ACCOUNT);
+        DataConf dataConf = initService(DataBaseConstant.DB_ACC);
         convertToSQLStrUtils = new ConvertToSQLStrUtils();
         dataBaseOperation = new DataBaseOperation(dataConf);
     }

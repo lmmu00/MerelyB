@@ -9,6 +9,7 @@ package com.merelyb.constant;
  */
 public class DataBaseConstant {
     //账户数据库
-    public final static String DB_ACCOUNT = "merelybAcc";
-    public final static String DB_VIDEOINFO = "dataVideo";
+    public final static String DB_ACC = "merelybAcc";
+    public final static String DB_RELATION = "merelybRelation";
+    public final static String DB_CONF = "merelybConf";
 }

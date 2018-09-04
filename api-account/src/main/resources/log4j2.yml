@@ -181,5 +181,5 @@ Configuration:
                 level: ALL
             -   name: com.merelyb.service.acc.AccountInfoService
                 level: ALL
-            -   name: com.merelyb.service.video.VideoInfoService
+            -   name: com.merelyb.service.video.RelationVideoInfoService
                 level: ALL

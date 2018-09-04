@@ -1,6 +1,6 @@
 database:
     dataType: 0
-    connection: jdbc:mysql://127.0.0.1:3306/database_conf?useUnicode=true&characterEncoding=UTF8&serverTimezone=Asia/Shanghai
+    connection: jdbc:mysql://127.0.0.1:3306/data_conf?useUnicode=true&characterEncoding=UTF8&serverTimezone=Asia/Shanghai
     verification:
         uName: user
         uValue: root

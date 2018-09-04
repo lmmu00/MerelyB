@@ -1,4 +1,4 @@
-package com.merelyb.bean;
+package com.merelyb.bean.acc;
 
 import java.util.Date;
 

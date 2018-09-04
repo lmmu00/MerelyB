@@ -1,4 +1,4 @@
-package com.merelyb.bean;
+package com.merelyb.bean.dataConf;
 
 import java.util.Date;
 /**

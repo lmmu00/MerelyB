@@ -1,4 +1,4 @@
-package com.merelyb.bean.video;
+package com.merelyb.bean.relation;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import java.util.Date;
  * @创建时间: 2018-08-13 11:46
  * @Description: ${Description}
  */
-public class VideoInfo {
+public class AccVideo {
 
     //编号
     private Long id;

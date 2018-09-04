@@ -1,6 +1,6 @@
 package com.merelyb.account.controller;
 
-import com.merelyb.bean.AccInfo;
+import com.merelyb.bean.acc.AccInfo;
 import com.merelyb.bean.ResultBean;
 import com.merelyb.constant.CodeConstant;
 import com.merelyb.constant.RequestConstant;

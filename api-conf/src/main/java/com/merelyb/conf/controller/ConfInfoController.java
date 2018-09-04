@@ -1,6 +1,6 @@
 package com.merelyb.conf.controller;
 
-import com.merelyb.bean.DataConf;
+import com.merelyb.bean.dataConf.DataConf;
 import com.merelyb.bean.ResultBean;
 import com.merelyb.conf.bean.DataBaseInfo;
 import com.merelyb.constant.CodeConstant;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import redis.clients.jedis.JedisShardInfo;
-import redis.clients.jedis.ShardedJedis;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
