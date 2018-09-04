@@ -1,223 +1,84 @@
 package com.merelyb.service.redis;
 
-import com.merelyb.bean.PageBean;
-import com.merelyb.bean.dataConf.DataConf;
 import com.merelyb.bean.dataConf.RedisConf;
-import com.merelyb.constant.DataBaseConstant;
-import com.merelyb.data.DataBaseOperation;
-import com.merelyb.service.BaseService;
-import com.merelyb.utils.database.ConvertToSQLStrUtils;
-import com.sun.org.apache.regexp.internal.RE;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.merelyb.constant.RequestConstant;
+import com.merelyb.utils.database.RedisUtils;
+import redis.clients.jedis.JedisShardInfo;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @项目: Merelyb
  * @包: com.merelyb.service.redis
  * @作者: LiM
- * @创建时间: 2018-09-04 15:03
- * @Description: redis操作
+ * @创建时间: 2018-09-04 20:43
+ * @Description: ${Description}
  */
-public class RedisOperationService extends BaseService<RedisConf> {
+public class RedisOperationService {
 
-    private ConvertToSQLStrUtils convertToSQLStrUtils;
+    private RedisConfService redisConfService;
 
-    protected DataBaseOperation dataBaseOperation;
+    private RedisUtils redisUtils;
 
-    private Logger logger = LogManager.getLogger(this.getClass());
+    private boolean bHasRedis = false;
 
-    public RedisOperationService() throws Exception{
-        DataConf dataConf = initService(DataBaseConstant.DB_CONF);
-        convertToSQLStrUtils = new ConvertToSQLStrUtils();
-        dataBaseOperation = new DataBaseOperation(dataConf);
-    }
-
-    @Override
-    protected DataConf initService(String sCode) throws Exception{
-        return super.initService(sCode);
+    /**
+     * 初始化
+     * @throws Exception
+     */
+    public RedisOperationService() throws Exception {
+        redisConfService = new RedisConfService();
+        RedisConf redisConf = new RedisConf();
+        redisConf.setIsDelete((byte) 0);
+        List<RedisConf> redisConfList = redisConfService.select(redisConf);
+        if (redisConfList != null && redisConfList.size() > 0) {
+            List<JedisShardInfo> jedisShardInfoList = new ArrayList<>();
+            for (RedisConf redis : redisConfList
+                    ) {
+                Pattern patternUrl = Pattern.compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+$");
+                Pattern patternIP = Pattern.compile("([1-9]|[1-9]\\\\d|1\\\\d{2}|2[0-4]\\\\d|25[0-5])(\\\\.(\\\\d|[1-9]\\\\d|1\\\\d{2}|2[0-4]\\\\d|25[0-5])){3}");
+                if (!patternUrl.matcher(redis.getAddIP()).find() && !patternIP.matcher(redis.getAddIP()).find())
+                    continue;
+                if (redis.getPort() == null) continue;
+                bHasRedis = true;
+                JedisShardInfo jedisShardInfo = new JedisShardInfo(redis.getAddIP(), Integer.parseInt(String.valueOf(redis.getPort())));
+                if (redisConf.getAuthPwd() != null) jedisShardInfo.setPassword(redis.getAuthPwd());
+                jedisShardInfoList.add(jedisShardInfo);
+            }
+            if(bHasRedis){
+                redisUtils = new RedisUtils(jedisShardInfoList);
+            }
+        }
     }
 
     /**
-     * 新增数据
-     * @param redisConf
+     * token 添加到redis
+     * @param sAccId
+     * @param sToken
      * @return
-     * @throws Exception
      */
-    @Override
-    public int insert(RedisConf redisConf) throws Exception {
-        if (super.insert(redisConf) == -1) return  -1;
-        String sSQL = "INSERT INTO redisconf(id, addIP, port, authPwd, createTime, updateTime, isDelete) VALUES ("
-            + convertToSQLStrUtils.ConvertToSQL(redisConf.getId()) + " ," + convertToSQLStrUtils.ConvertToSQL(redisConf.getAddIP())
-            + ", " + convertToSQLStrUtils.ConvertToSQL(redisConf.getPort()) + ", "  + convertToSQLStrUtils.ConvertToSQL(redisConf.getAuthPwd())
-            + ", " + convertToSQLStrUtils.ConvertToSQL(redisConf.getCreateTime()) + ", " + convertToSQLStrUtils.ConvertToSQL(redisConf.getUpdateTime())
-            + ", " + convertToSQLStrUtils.ConvertToSQL(redisConf.getIsDelete()) + ");";
-        logger.info(sSQL);
-        return  dataBaseOperation.insertAndUpdateAndDelete(sSQL);
+    public boolean addNewToken(String sAccId, String sToken){
+        if (!bHasRedis) return false;
+        return redisUtils.hashAdd(RequestConstant.REQUEST_TOKEN, sToken, sAccId);
     }
 
     /**
-     * 查询数据
-     * @param redisConf
+     * 通过token获取账户Id
+     * @param sToken
      * @return
-     * @throws Exception
      */
-    @Override
-    public List<RedisConf> select(RedisConf redisConf) throws Exception{
-        String sSQL = "SELECT * FROM redisconf WHERE 1=1 ";
-        if(redisConf.getId() != null){
-            sSQL += " and id = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getId());
-        }
-        if(redisConf.getAddIP() != null){
-            sSQL += " and addIP = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAddIP());
-        }
-        if(redisConf.getPort() != null){
-            sSQL += " and port = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getPort());
-        }
-        if(redisConf.getAuthPwd() != null){
-            sSQL += " and authPwd = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAuthPwd());
-        }
-        if(redisConf.getIsDelete() != null){
-            sSQL += " and isDelete = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getIsDelete());
-        }
-        logger.info(sSQL);
-        return dataBaseOperation.query(sSQL, RedisConf.class);
+    public String getAccFromToken(String sToken){
+        if(!bHasRedis) return "";
+        return redisUtils.hashGetValue(RequestConstant.REQUEST_TOKEN, sToken, String.class);
     }
 
     /**
-     * 逻辑删除数据
-     * @param redisConf
-     * @return
-     * @throws Exception
+     * 销毁
      */
-    @Override
-    public int delete(RedisConf redisConf) throws Exception {
-        if (super.delete(redisConf) == -1) return -1;
-        String sSQL = "UPDATE redisconf SET isDelete = 1, updateTime =" + convertToSQLStrUtils.ConvertToSQL(new Date()) + " Where ";
-        if(redisConf.getId() != null){
-            sSQL += " id = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getId()) + " and";
-        }
-        if(redisConf.getAddIP() != null){
-            sSQL += " addIP = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAddIP()) + " and";
-        }
-        if(redisConf.getPort() != null){
-            sSQL += " port = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getPort()) + " and";
-        }
-        if(redisConf.getAuthPwd() != null){
-            sSQL += " authPwd = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAuthPwd()) + " and";
-        }
-        if(redisConf.getIsDelete() != null){
-            sSQL += " isDelete = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getIsDelete()) + " and";
-        }
-        sSQL = sSQL.substring(0, sSQL.lastIndexOf("and"));
-        logger.info(sSQL);
-        return dataBaseOperation.insertAndUpdateAndDelete(sSQL);
-    }
-
-    /**
-     * 更新数据
-     * @param redisConf
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public int updateById(RedisConf redisConf) throws Exception {
-        if (super.updateById(redisConf) == -1) return -1;
-        String sSQL = "UPDATE redisconf SET updateTime =" + convertToSQLStrUtils.ConvertToSQL(new Date()) + ", ";
-        if(redisConf.getAddIP() != null){
-            sSQL += " addIP = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAddIP()) + ", ";
-        }
-        if(redisConf.getPort() != null){
-            sSQL += " port = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getPort()) + ", ";
-        }
-        if(redisConf.getAuthPwd() != null){
-            sSQL += " authPwd = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAuthPwd()) + ", ";
-        }
-        if(redisConf.getIsDelete() != null){
-            sSQL += " isDelete = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getIsDelete()) + ", ";
-        }
-        sSQL = sSQL.substring(0, sSQL.lastIndexOf(",")) + " WHERE id = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getId());
-        logger.info(sSQL);
-        return dataBaseOperation.insertAndUpdateAndDelete(sSQL);
-    }
-
-    /**
-     * 更新数据
-     * @param redisConf
-     * @param redisConfWhere
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public int updateByBean(RedisConf redisConf, RedisConf redisConfWhere) throws Exception {
-        if (super.updateByBean(redisConf, redisConfWhere) == -1) return  -1;
-        String sSQL = "UPDATE redisconf SET updateTime =" + convertToSQLStrUtils.ConvertToSQL(new Date()) + ", ";
-        if(redisConf.getAddIP() != null){
-            sSQL += " addIP = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAddIP()) + ", ";
-        }
-        if(redisConf.getPort() != null){
-            sSQL += " port = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getPort()) + ", ";
-        }
-        if(redisConf.getAuthPwd() != null){
-            sSQL += " authPwd = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAuthPwd()) + ", ";
-        }
-        if(redisConf.getIsDelete() != null){
-            sSQL += " isDelete = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getIsDelete()) + ", ";
-        }
-        sSQL = sSQL.substring(0, sSQL.lastIndexOf(",")) + " WHERE ";
-
-        String sWhere = "";
-
-        if(redisConf.getId() != null){
-            sWhere += " id = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getId()) + " and ";
-        }
-        if(redisConf.getAddIP() != null){
-            sWhere += " addIP = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAddIP())  + " and ";
-        }
-        if(redisConf.getPort() != null){
-            sWhere += " port = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getPort())  + " and ";
-        }
-        if(redisConf.getAuthPwd() != null){
-            sWhere += " authPwd = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAuthPwd())  + " and ";
-        }
-        if(redisConf.getIsDelete() != null){
-            sWhere += " isDelete = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getIsDelete())  + " and ";
-        }
-        sWhere = sWhere.substring(0, sWhere.lastIndexOf("and"));
-        sSQL += sWhere;
-        logger.info(sSQL);
-        return dataBaseOperation.insertAndUpdateAndDelete(sSQL);
-    }
-
-    /**
-     * 分页查询
-     * @param redisConf
-     * @param pageBean
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public List<RedisConf> selectByPage(RedisConf redisConf, PageBean pageBean) throws Exception{
-        String sSQL = "SELECT * FROM redisconf WHERE 1=1 ";
-        if(redisConf.getId() != null){
-            sSQL += " and id = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getId());
-        }
-        if(redisConf.getAddIP() != null){
-            sSQL += " and addIP = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAddIP());
-        }
-        if(redisConf.getPort() != null){
-            sSQL += " and port = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getPort());
-        }
-        if(redisConf.getAuthPwd() != null){
-            sSQL += " and authPwd = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getAuthPwd());
-        }
-        if(redisConf.getIsDelete() != null){
-            sSQL += " and isDelete = " + convertToSQLStrUtils.ConvertToSQL(redisConf.getIsDelete());
-        }
-        sSQL += " limit " + String.valueOf(pageBean.getOffset()) + ", " + String.valueOf(pageBean.getPageSize());
-        logger.info(sSQL);
-        return dataBaseOperation.query(sSQL, RedisConf.class);
+    public void destroy(){
+        redisUtils.destroy();
+        redisConfService = null;
     }
 }

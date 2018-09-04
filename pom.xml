@@ -14,6 +14,7 @@
         <module>api-video</module>
         <module>common-service</module>
         <module>api-face</module>
+        <module>api-relation</module>
     </modules>
     <packaging>pom</packaging>
 
