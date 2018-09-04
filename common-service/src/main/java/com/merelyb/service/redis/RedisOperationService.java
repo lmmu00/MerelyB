@@ -61,7 +61,7 @@ public class RedisOperationService {
      */
     public boolean addNewToken(String sAccId, String sToken){
         if (!bHasRedis) return false;
-        return redisUtils.hashAdd(RequestConstant.REQUEST_TOKEN, sToken, sAccId);
+        return redisUtils.add(sToken, sAccId);
     }
 
     /**
@@ -71,7 +71,28 @@ public class RedisOperationService {
      */
     public String getAccFromToken(String sToken){
         if(!bHasRedis) return "";
-        return redisUtils.hashGetValue(RequestConstant.REQUEST_TOKEN, sToken, String.class);
+        return redisUtils.get(sToken, String.class);
+    }
+
+    /**
+     * 设置token超时时间
+     * @param sToken
+     * @param lTime
+     * @return
+     */
+    public Long setTokenTime(String sToken, int lTime){
+        if(!bHasRedis) return -1L;
+        return redisUtils.expire(sToken, lTime);
+    }
+
+    /**
+     * 验证token是否存在
+     * @param sToken
+     * @return
+     */
+    public boolean exitToken(String sToken){
+        if(!bHasRedis) return false;
+        return redisUtils.exist(sToken);
     }
 
     /**
