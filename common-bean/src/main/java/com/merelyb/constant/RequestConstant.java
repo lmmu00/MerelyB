@@ -16,4 +16,6 @@ public class RequestConstant {
     public final static String ACCOUNT_ADDACC_PWD = "pwd";
 
     public final static String REQUEST_TOKEN = "sstk";
+
+    public final static int ITOKENVAILD = 60 * 60 *2;
 }

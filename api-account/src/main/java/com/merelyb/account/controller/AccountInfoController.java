@@ -162,6 +162,7 @@ public class AccountInfoController {
             String sToken = cryptUtils.DecryptBase64(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + String.valueOf(accInfo.getAccId()));
             RedisOperationService redisOperationService = new RedisOperationService();
             redisOperationService.addNewToken(String.valueOf(accInfo.getAccId()), sToken);
+            redisOperationService.setTokenTime(sToken, RequestConstant.ITOKENVAILD);
             redisOperationService.destroy();
 
             resultBean.setStatus(true);

@@ -1,7 +1,6 @@
 package com.merelyb.service.redis;
 
 import com.merelyb.bean.dataConf.RedisConf;
-import com.merelyb.constant.RequestConstant;
 import com.merelyb.utils.database.RedisUtils;
 import redis.clients.jedis.JedisShardInfo;
 

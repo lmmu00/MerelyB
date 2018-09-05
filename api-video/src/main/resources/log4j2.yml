@@ -44,8 +44,8 @@ Configuration:
             #日期格式不能为冒号，否则无法生成，因为文件名不允许有冒号，此appender只输出trace级别的数据到trace.log
             -   name: trace_appender
                 immediateFlush: true
-                fileName: ${LOG_HOME}/face_trace.log
-                filePattern: '${LOG_HOME}/trace/face_trace - %d{yyyy-MM-dd}.log.gz'
+                fileName: ${LOG_HOME}/video_trace.log
+                filePattern: '${LOG_HOME}/trace/video_trace - %d{yyyy-MM-dd}.log.gz'
                 PatternLayout:
                     pattern: '%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %m%n'
                 Policies:
@@ -69,8 +69,8 @@ Configuration:
             # 否则无法生成，因为文件名不允许有冒号，此appender只输出debug级别的数据到debug.log;
             -   name: debug_appender
                 immediateFlush: true
-                fileName: ${LOG_HOME}/face_debug.log
-                filePattern: '${LOG_HOME}/debug/face_debug - %d{yyyy-MM-dd}.log.gz'
+                fileName: ${LOG_HOME}/video_debug.log
+                filePattern: '${LOG_HOME}/debug/video_debug - %d{yyyy-MM-dd}.log.gz'
                 PatternLayout:
                     pattern: '%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %m%n'
                 Policies:
@@ -92,8 +92,8 @@ Configuration:
             # INFO级别日志
             -   name: info_appender
                 immediateFlush: true
-                fileName: ${LOG_HOME}/face_info.log
-                filePattern: '${LOG_HOME}/info/face_info - %d{yyyy-MM-dd}.log.gz'
+                fileName: ${LOG_HOME}/video_info.log
+                filePattern: '${LOG_HOME}/info/video_info - %d{yyyy-MM-dd}.log.gz'
                 PatternLayout:
                     pattern: '%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %m%n'
                 Policies:
@@ -113,8 +113,8 @@ Configuration:
             # WARN级别日志
             -   name: warn_appender
                 immediateFlush: true
-                fileName: ${LOG_HOME}/face_warn.log
-                filePattern: '${LOG_HOME}/warn/face_warn - %d{yyyy-MM-dd}.log.gz'
+                fileName: ${LOG_HOME}/video_warn.log
+                filePattern: '${LOG_HOME}/warn/video_warn - %d{yyyy-MM-dd}.log.gz'
                 PatternLayout:
                     pattern: '%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %m%n'
                 Policies:
@@ -134,8 +134,8 @@ Configuration:
             # ERROR级别日志
             -   name: error_appender
                 immediateFlush: true
-                fileName: ${LOG_HOME}/face_error.log
-                filePattern: '${LOG_HOME}/error/face_error - %d{yyyy-MM-dd}.log.gz'
+                fileName: ${LOG_HOME}/video_error.log
+                filePattern: '${LOG_HOME}/error/video_error - %d{yyyy-MM-dd}.log.gz'
                 PatternLayout:
                     pattern: '%5p [%t] %d{yyyy-MM-dd HH:mm:ss} (%F:%L) %m%n'
                 Policies:
@@ -175,15 +175,5 @@ Configuration:
                 level: warn
             -   name: org.apache.http
                 level: warn
-            -   name: com.merelyb.account.controller.AccountInfoController
-                level: ALL
-            -   name: com.merelyb.service.BaseService
-                level: ALL
-            -   name: com.merelyb.service.acc.AccountInfoService
-                level: ALL
-            -   name: com.merelyb.service.video.VideoInfoService
-                level: ALL
-            -   name: com.merelyb.face.controller.FaceAddController
-                level: ALL
             -   name: com.merelyb.video.controller.VideoOperationController
                 level: ALL

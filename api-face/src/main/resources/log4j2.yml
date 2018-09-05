@@ -175,13 +175,11 @@ Configuration:
                 level: warn
             -   name: org.apache.http
                 level: warn
-            -   name: com.merelyb.account.controller.AccountInfoController
-                level: ALL
             -   name: com.merelyb.service.BaseService
                 level: ALL
-            -   name: com.merelyb.service.acc.AccountInfoService
+            -   name: com.merelyb.service.redis.RedisConfService
                 level: ALL
-            -   name: com.merelyb.service.video.VideoInfoService
+            -   name: com.merelyb.service.redis.RedisOperationService
                 level: ALL
             -   name: com.merelyb.face.controller.FaceAddController
                 level: ALL
