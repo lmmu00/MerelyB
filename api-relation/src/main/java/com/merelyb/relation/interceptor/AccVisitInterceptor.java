@@ -31,7 +31,7 @@ public class AccVisitInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        logger.info("------------我是拦截器-----------------");
+        logger.info("------------我是拦截器(begin)-----------------");
         String sToken = request.getParameter(RequestConstant.REQUEST_TOKEN);
         try {
             if (sToken != null) {
@@ -40,21 +40,23 @@ public class AccVisitInterceptor implements HandlerInterceptor {
                     redisOperationService.setTokenTime(sToken, RequestConstant.ITOKENVAILD);
                 } else {
                     logger.info(request.getParameterMap());
-                    logger.info("------------我是拦截器-----------------");
+                    logger.info("------------我是拦截器(end)-----------------");
                     return false;
                 }
             } else {
                 logger.info(request.getParameterMap());
-                logger.info("------------我是拦截器-----------------");
-                return false;
+                logger.info("------------我是拦截器(end)-----------------");
+                //需添加白名单
+                if(request.getRequestURI().equals("/")) return true;
+                return true;
             }
         } catch (Exception e) {
-            logger.info("------------我是拦截器-----------------");
+            logger.info("------------我是拦截器(end)-----------------");
             e.printStackTrace();
             logger.error(e.getMessage());
             return false;
         }
-        logger.info("------------我是拦截器-----------------");
+        logger.info("------------我是拦截器(end)-----------------");
         return true;
     }
 

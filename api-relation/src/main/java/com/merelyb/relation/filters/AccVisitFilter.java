@@ -16,7 +16,6 @@ import java.io.IOException;
  * @创建时间: 2018-09-05 16:18
  * @Description: 过滤器
  */
-@WebFilter(urlPatterns = "/relation", filterName = "accVisitFilter")
 public class AccVisitFilter implements Filter {
 
     private Logger logger = LogManager.getLogger(this.getClass());
@@ -29,13 +28,13 @@ public class AccVisitFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         long start = System.currentTimeMillis();
-        logger.info("------------我是过滤器-----------------");
+        logger.info("------------我是过滤器(begin)-----------------");
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         logger.info(request.getRequestURI());
         //加判断
         filterChain.doFilter(servletRequest, servletResponse);
         logger.info("消耗时间：" + (System.currentTimeMillis() - start));
-        logger.info("------------我是过滤器-----------------");
+        logger.info("------------我是过滤器(end)-----------------");
     }
 
     @Override

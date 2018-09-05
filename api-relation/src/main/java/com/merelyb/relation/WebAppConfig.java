@@ -1,6 +1,8 @@
 package com.merelyb.relation;
 
+import com.merelyb.relation.filters.AccVisitFilter;
 import com.merelyb.relation.interceptor.AccVisitInterceptor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -23,10 +25,28 @@ public class WebAppConfig implements WebMvcConfigurer {
         return new AccVisitInterceptor();
     }
 
-    /**
-     * 拦截器加入
-     * @param registry
-     */
+    @Bean
+    public FilterRegistrationBean accVisitFilter() {
+        //配置无需过滤的路径或者静态资源，如：css，imgage等
+        StringBuffer excludedUriStr = new StringBuffer();
+        excludedUriStr.append("/login/*");
+        excludedUriStr.append(",");
+        excludedUriStr.append("/favicon.ico");
+        excludedUriStr.append(",");
+        excludedUriStr.append("/js/*");
+
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new AccVisitFilter());
+        registration.addUrlPatterns("/*");
+        registration.addInitParameter("excludedUri", excludedUriStr.toString());
+        registration.setName("accVisitFilter");
+        registration.setOrder(1);
+        return registration;
+    }
+        /**
+         * 拦截器加入
+         * @param registry
+         */
     @Override
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(getLoginInterceptor())
