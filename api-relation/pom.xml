@@ -5,11 +5,19 @@
     <parent>
         <artifactId>merelyb</artifactId>
         <groupId>com.merelyb</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>api-relation</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.merelyb</groupId>
+            <artifactId>common-bean</artifactId>
+            <version>1.0.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 
 </project>
