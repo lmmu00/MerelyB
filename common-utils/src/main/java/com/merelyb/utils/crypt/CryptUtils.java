@@ -3,6 +3,8 @@ package com.merelyb.utils.crypt;
 import com.merelyb.utils.calendar.ChineseEra;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
@@ -90,4 +92,36 @@ public class CryptUtils {
         return sPwd;
     }
 
+    /***
+     * BASE64 加密
+     * @param sSource
+     * @return
+     * @throws Exception
+     */
+    public String EncryptBase64(String sSource) throws Exception {
+        byte[] bData = null;
+        String sReturn = null;
+        bData = sSource.getBytes("utf-8");
+        if (bData != null) {
+            sReturn = new BASE64Encoder().encode(bData);
+        }
+        return sReturn;
+    }
+
+    /**
+     * BASE64 解密
+     * @param sSource
+     * @return
+     * @throws Exception
+     */
+    public  String DecryptBase64(String sSource) throws Exception {
+        byte[] bData = null;
+        String sReturn = null;
+        if (sSource != null) {
+            BASE64Decoder decoder = new BASE64Decoder();
+            bData = decoder.decodeBuffer(sSource);
+            sReturn = new String(bData, "utf-8");
+        }
+        return sReturn;
+    }
 }

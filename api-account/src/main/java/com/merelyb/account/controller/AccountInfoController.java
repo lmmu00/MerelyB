@@ -6,6 +6,7 @@ import com.merelyb.constant.CodeConstant;
 import com.merelyb.constant.RequestConstant;
 import com.merelyb.constant.ResultConstant;
 import com.merelyb.service.acc.AccountInfoService;
+import com.merelyb.service.redis.RedisOperationService;
 import com.merelyb.utils.crypt.CryptUtils;
 import com.merelyb.utils.json.JsonUtils;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -156,9 +158,15 @@ public class AccountInfoController {
                 logger.info(JsonUtils.obj2Json(resultBean));
                 return resultBean;
             }
+            //token 放到redis
+            String sToken = cryptUtils.DecryptBase64(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + String.valueOf(accInfo.getAccId()));
+            RedisOperationService redisOperationService = new RedisOperationService();
+            redisOperationService.addNewToken(String.valueOf(accInfo.getAccId()), sToken);
+            redisOperationService.destroy();
+
             resultBean.setStatus(true);
             resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_LOGIN);
-            resultBean.setData(""); //需添加token
+            resultBean.setData(sToken); //需添加token
             resultBean.setMsg(ResultConstant.MSG_COMMON_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
