@@ -29,7 +29,7 @@ public class AccountFilter implements Filter{
         logger.info("------------我是过滤器AccountFilter(begin)-----------------");
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         logger.info(request.getRequestURI());
-        //加判断
+        //加判断 通过执行下面
         filterChain.doFilter(servletRequest, servletResponse);
         logger.info("消耗时间：" + (System.currentTimeMillis() - start));
         logger.info("------------我是过滤器AccountFilter(end)-----------------");

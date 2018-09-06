@@ -43,19 +43,11 @@ public class WebAppConfig implements WebMvcConfigurer {
 
     @Bean
     public FilterRegistrationBean accVisitFilter() {
-        //配置无需过滤的路径或者静态资源，如：css，imgage等
-//        StringBuffer excludedUriStr = new StringBuffer();
-//        excludedUriStr.append("/login/*");
-//        excludedUriStr.append(",");
-//        excludedUriStr.append("/favicon.ico");
-//        excludedUriStr.append(",");
-//        excludedUriStr.append("/js/*");
-
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(accountFilter());
-//        registration.addUrlPatterns("/*");
-//        registration.addInitParameter("excludedUri", excludedUriStr.toString());
-//        registration.setName("accVisitFilter");
+        registration.addUrlPatterns("/*");
+        registration.addInitParameter("urlAllow", "");
+        registration.setName("accVisitFilter");
         registration.setOrder(1);
         return registration;
     }
