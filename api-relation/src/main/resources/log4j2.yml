@@ -191,5 +191,7 @@ Configuration:
                 level: ALL
             -   name: com.merelyb.video.controller.VideoOperationController
                 level: ALL
-            -   name: com.merelyb.relation.filters.AccVisitFilter
+            -   name: com.merelyb.preparation.filters.AccountFilter
+                level: ALL
+            -   name: com.merelyb.preparation.interceptors.TokenInterceptor
                 level: ALL

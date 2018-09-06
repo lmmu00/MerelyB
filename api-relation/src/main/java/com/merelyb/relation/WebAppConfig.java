@@ -1,7 +1,7 @@
 package com.merelyb.relation;
 
-import com.merelyb.relation.filters.AccVisitFilter;
-import com.merelyb.relation.interceptor.AccVisitInterceptor;
+import com.merelyb.preparation.filters.AccountFilter;
+import com.merelyb.preparation.interceptors.TokenInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.servlet.Filter;
 
 /**
  * @项目: Merelyb
@@ -20,26 +22,40 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebAppConfig implements WebMvcConfigurer {
+
+    /**
+     * 拦截器
+     * @return
+     */
     @Bean
-    public HandlerInterceptor getLoginInterceptor(){
-        return new AccVisitInterceptor();
+    public HandlerInterceptor tokenInterceptor(){
+        return new TokenInterceptor();
+    }
+
+    /**
+     * 过滤器
+     * @return
+     */
+    @Bean
+    public Filter accountFilter(){
+        return new AccountFilter();
     }
 
     @Bean
     public FilterRegistrationBean accVisitFilter() {
         //配置无需过滤的路径或者静态资源，如：css，imgage等
-        StringBuffer excludedUriStr = new StringBuffer();
-        excludedUriStr.append("/login/*");
-        excludedUriStr.append(",");
-        excludedUriStr.append("/favicon.ico");
-        excludedUriStr.append(",");
-        excludedUriStr.append("/js/*");
+//        StringBuffer excludedUriStr = new StringBuffer();
+//        excludedUriStr.append("/login/*");
+//        excludedUriStr.append(",");
+//        excludedUriStr.append("/favicon.ico");
+//        excludedUriStr.append(",");
+//        excludedUriStr.append("/js/*");
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new AccVisitFilter());
-        registration.addUrlPatterns("/*");
-        registration.addInitParameter("excludedUri", excludedUriStr.toString());
-        registration.setName("accVisitFilter");
+        registration.setFilter(accountFilter());
+//        registration.addUrlPatterns("/*");
+//        registration.addInitParameter("excludedUri", excludedUriStr.toString());
+//        registration.setName("accVisitFilter");
         registration.setOrder(1);
         return registration;
     }
@@ -49,7 +65,7 @@ public class WebAppConfig implements WebMvcConfigurer {
          */
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(getLoginInterceptor())
+        registry.addInterceptor(tokenInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/error")
                 .excludePathPatterns("/static/*");

@@ -1,4 +1,4 @@
-package com.merelyb.relation.interceptor;
+package com.merelyb.preparation.interceptors;
 
 import com.merelyb.constant.RequestConstant;
 import com.merelyb.service.redis.RedisOperationService;
@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @项目: Merelyb
- * @包: com.merelyb.relation.interceptor
+ * @包: com.merelyb.preparation.interceptors
  * @作者: LiM
- * @创建时间: 2018-09-05 16:33
- * @Description: 拦截器
+ * @创建时间: 2018-09-06 10:37
+ * @Description: token拦截器
  */
-public class AccVisitInterceptor implements HandlerInterceptor {
+public class TokenInterceptor implements HandlerInterceptor {
 
     private Logger logger = LogManager.getLogger(this.getClass());
 
@@ -31,7 +31,7 @@ public class AccVisitInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        logger.info("------------我是拦截器(begin)-----------------");
+        logger.info("------------我是拦截器TokenInterceptor(begin)-----------------");
         String sToken = request.getParameter(RequestConstant.REQUEST_TOKEN);
         try {
             if (sToken != null) {
@@ -40,23 +40,23 @@ public class AccVisitInterceptor implements HandlerInterceptor {
                     redisOperationService.setTokenTime(sToken, RequestConstant.ITOKENVAILD);
                 } else {
                     logger.info(request.getParameterMap());
-                    logger.info("------------我是拦截器(end)-----------------");
+                    logger.info("------------我是拦截器TokenInterceptor(end)-----------------");
                     return false;
                 }
             } else {
                 logger.info(request.getParameterMap());
-                logger.info("------------我是拦截器(end)-----------------");
+                logger.info("------------我是拦截器TokenInterceptor(end)-----------------");
                 //需添加白名单
                 if(request.getRequestURI().equals("/")) return true;
                 return true;
             }
         } catch (Exception e) {
-            logger.info("------------我是拦截器(end)-----------------");
+            logger.info("------------我是拦截器TokenInterceptor(end)-----------------");
             e.printStackTrace();
             logger.error(e.getMessage());
             return false;
         }
-        logger.info("------------我是拦截器(end)-----------------");
+        logger.info("------------我是拦截器TokenInterceptor(end)-----------------");
         return true;
     }
 

@@ -1,5 +1,7 @@
 package com.merelyb.constant;
 
+import javax.swing.plaf.PanelUI;
+
 /**
  * @项目: Merelyb
  * @包: com.merelyb.constant
@@ -10,5 +12,13 @@ package com.merelyb.constant;
 public class UrlContant {
 
      //getNeedData URL
-    public final static String getNeedDataUrl = "http://localhost:8080/api-conf/getNeedData?code=";
+    public final static String DATACONFURL = "http://localhost:8080/api-conf/getNeedData?code=";
+
+    public final static String WEBROOTURL = "/";
+
+    public final static String WEBACCURL = "/account";
+
+    public final static String WEBVIDEOURL = "/video";
+
+    public final static String WEBRELATIONURL = "/relation";
 }

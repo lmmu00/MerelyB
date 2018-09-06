@@ -15,6 +15,7 @@
         <module>common-service</module>
         <module>api-face</module>
         <module>api-relation</module>
+        <module>common-preparation</module>
     </modules>
     <packaging>pom</packaging>
 

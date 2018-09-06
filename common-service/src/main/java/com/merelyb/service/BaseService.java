@@ -32,7 +32,7 @@ public class BaseService<T> {
      */
     protected DataConf initService(String sCode) throws Exception{
         DataConf dataConf = null;
-        String sUrl = UrlContant.getNeedDataUrl + sCode;
+        String sUrl = UrlContant.DATACONFURL + sCode;
         logger.info(sUrl);
         HttpClientUtils httpClientUtils = new HttpClientUtils();
         HttpClientResult httpClientResult = httpClientUtils.httpPostRequest(sUrl);
