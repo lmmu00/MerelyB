@@ -7,9 +7,6 @@ import com.merelyb.constant.RequestConstant;
 import com.merelyb.constant.ResultConstant;
 import com.merelyb.service.redis.RedisOperationService;
 import com.merelyb.service.relation.RelationVideoInfoService;
-import com.merelyb.utils.database.RedisUtils;
-import com.merelyb.utils.httpclient.HttpClientResult;
-import com.merelyb.utils.httpclient.HttpClientUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
