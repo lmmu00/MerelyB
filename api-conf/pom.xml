@@ -27,6 +27,6 @@
     <artifactId>api-conf</artifactId>
 
     <build>
-        <finalName>api-conf</finalName>
+        <finalName>conf</finalName>
     </build>
 </project>

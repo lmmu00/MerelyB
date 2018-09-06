@@ -12,7 +12,7 @@ import javax.swing.plaf.PanelUI;
 public class UrlContant {
 
      //getNeedData URL
-    public final static String DATACONFURL = "http://localhost:8080/api-conf/getNeedData?code=";
+    public final static String DATACONFURL = "http://www.merelyb.com/conf/getNeedData?code=";
 
     public final static String WEBROOTURL = "/";
 

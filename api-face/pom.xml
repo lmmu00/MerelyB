@@ -9,6 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>war</packaging>
+    <artifactId>api-face</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>com.merelyb</groupId>
@@ -17,7 +19,8 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-    <artifactId>api-face</artifactId>
 
-
+    <build>
+        <finalName>face</finalName>
+    </build>
 </project>

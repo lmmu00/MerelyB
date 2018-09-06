@@ -3,7 +3,7 @@ Configuration:
     properties:
         property:
             -    name: LOG_HOME
-                 value: D:\SourceCode\JAVA\MerelyB11
+                 value: /usr/local/weblog
     Appenders:
          # 优先级从高到低分别是 OFF、FATAL、ERROR、WARN、INFO、DEBUG、ALL
          # 单词解释： Match：匹配 DENY：拒绝 Mismatch：不匹配 ACCEPT：接受

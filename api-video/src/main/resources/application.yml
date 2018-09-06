@@ -11,5 +11,5 @@ logging:
   config: classpath:log4j2.yml
 upload:
   win: D:\SourceCode\JAVA\Merelyb
-  liu: usr/local/
-  cur: 0
+  liu: /usr/local/webfile
+  cur: 1

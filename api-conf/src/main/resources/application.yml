@@ -1,11 +1,11 @@
 database:
     dataType: 0
-    connection: jdbc:mysql://127.0.0.1:3306/data_conf?useUnicode=true&characterEncoding=UTF8&serverTimezone=Asia/Shanghai
+    connection: jdbc:mysql://47.52.137.77:3306/data_conf?useUnicode=true&characterEncoding=UTF8&serverTimezone=Asia/Shanghai
     verification:
         uName: user
-        uValue: root
+        uValue: liming
         pName: password
-        pValue: liming5258
+        pValue: Lim_5258@163.com
 spring:
     thymeleaf:
         prefix: classpath:/templates/
