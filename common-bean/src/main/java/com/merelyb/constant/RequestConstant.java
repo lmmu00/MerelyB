@@ -17,5 +17,11 @@ public class RequestConstant {
 
     public final static String REQUEST_TOKEN = "sstk";
 
+    public final static String REQUEST_REMARK = "remark";
+    public final static String REQUEST_VIDEOURL = "videoUrl";
+    public final static String REQUEST_IMAGEURL = "imageUrl";
+    public final static String REQUEST_CURTYPE = "curType";
+    public final static String REQUEST_CURID = "curId";
+
     public final static int ITOKENVAILD = 60 * 60 *2;
 }

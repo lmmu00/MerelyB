@@ -61,7 +61,7 @@ public class AccountInfoController {
             resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_ADDACC);
             resultBean.setData("");
             resultBean.setMsg(ResultConstant.MSG_COMMON_DATA_NULL);
-            logger.info(JsonUtils.obj2Json(resultBean));
+            logger.info(resultBean);
             return resultBean;
         }
         //密码需加base64解码
@@ -80,7 +80,7 @@ public class AccountInfoController {
                 resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_ADDACC);
                 resultBean.setData("");
                 resultBean.setMsg(ResultConstant.MSG_ACCOUNY_LOGIN_HAD);
-                logger.info(JsonUtils.obj2Json(resultBean));
+                logger.info(resultBean);
                 return resultBean;
             }
             accInfo.setAccPwd(sPwd);
@@ -103,11 +103,11 @@ public class AccountInfoController {
             resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_ADDACC);
             resultBean.setData("");
             resultBean.setMsg(ResultConstant.MSG_COMMON_DATABASE_ERE);
-            logger.error(JsonUtils.obj2Json(resultBean));
+            logger.error(resultBean);
             logger.error(e.getMessage());
             return resultBean;
         }
-        logger.info(JsonUtils.obj2Json(resultBean));
+        logger.info(resultBean);
         return resultBean;
     }
 
@@ -129,7 +129,7 @@ public class AccountInfoController {
             resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_LOGIN);
             resultBean.setData("");
             resultBean.setMsg(ResultConstant.MSG_COMMON_DATA_NULL);
-            logger.info(JsonUtils.obj2Json(resultBean));
+            logger.info(resultBean);
             return resultBean;
         }
         AccInfo accInfo = new AccInfo();
@@ -143,7 +143,7 @@ public class AccountInfoController {
                 resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_LOGIN);
                 resultBean.setData("");
                 resultBean.setMsg(ResultConstant.MSG_ACCOUNT_LOGIN_NULL);
-                logger.info(JsonUtils.obj2Json(resultBean));
+                logger.info(resultBean);
                 return resultBean;
             }
             logger.info(JsonUtils.objs2Json(accInfoList));
@@ -155,7 +155,7 @@ public class AccountInfoController {
                 resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_LOGIN);
                 resultBean.setData("");
                 resultBean.setMsg(ResultConstant.MSG_ACCOUNT_LOGIN_ERR);
-                logger.info(JsonUtils.obj2Json(resultBean));
+                logger.info(resultBean);
                 return resultBean;
             }
             //token 放到redis
@@ -175,11 +175,11 @@ public class AccountInfoController {
             resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_LOGIN);
             resultBean.setData("");
             resultBean.setMsg(ResultConstant.MSG_COMMON_DATABASE_ERE);
-            logger.error(JsonUtils.obj2Json(resultBean));
+            logger.error(resultBean);
             logger.error(e.getMessage());
             return resultBean;
         }
-        logger.info(JsonUtils.obj2Json(resultBean));
+        logger.info(resultBean);
         return resultBean;
     }
 }

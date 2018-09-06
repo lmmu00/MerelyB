@@ -18,6 +18,7 @@ public class CodeConstant {
     public final static String CODE_MOUDLE_ACCOUNT = "1001";
     public final static String CODE_MOUDLE_FACE = "1002";
     public final static String CODE_MOUDLE_VIDEO = "1003";
+    public final static String CODE_MOUDLE_RELATION = "1004";
 
 
 
@@ -31,4 +32,7 @@ public class CodeConstant {
     public final static String CODE_FACE_DRIVERLICENSEINFO = "0007";
     public final static String CODE_FACE_BANKCARDINGO = "0008";
     public final static String CODE_VIDE_UPLOADJAVA = "0009";
+    public final static String CODE_RELATION_NEWVIDEO = "0010";
+    public final static String CODE_RELATION_GETVIDEO = "0011";
+    public final static String CODE_RELATION_DELVIDEO = "0012";
 }

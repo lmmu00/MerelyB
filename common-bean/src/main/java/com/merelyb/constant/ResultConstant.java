@@ -25,6 +25,8 @@ public class ResultConstant {
     public final static String MSG_ACCOUNT_LOGIN_NULL = "用户不存在！";
     public final static String MSG_ACCOUNY_LOGIN_HAD = "用户已存在！";
 
+    public final static String MSG_TOKEN_ERR = "Token失效或不存在！";
+
     public final static String MSG_VIDEO_UPLOADJAVA_FORM = "提交方式错误！";
     public final static String MSG_VIDEO_UPLOADJAVA_SIZE = "文件太大！";
     public final static String MSG_VIDEO_UPLOADJAVA_UPLOAD = "上传失败！";

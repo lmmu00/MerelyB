@@ -134,7 +134,7 @@ public class VideoOperationController {
             resultBean.setCode(CodeConstant.CODE_MOUDLE_VIDEO + CodeConstant.CODE_VIDE_UPLOADJAVA);
             resultBean.setData(JsonUtils.obj2Json(mapFile));
             resultBean.setCode(ResultConstant.MSG_COMMON_SUCCESS);
-            logger.info(JsonUtils.obj2Json(resultBean));
+            logger.info(resultBean);
         } catch (IOException e) {
             logger.error(e.getMessage());
             resultBean.setStatus(false);

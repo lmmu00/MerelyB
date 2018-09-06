@@ -242,7 +242,7 @@ public class FaceAddController {
             resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_INFOBYIMAGE);
             resultBean.setData("");
             resultBean.setMsg(ResultConstant.MSG_COMMON_DATA_NULL);
-            logger.info(JsonUtils.obj2Json(resultBean));
+            logger.info(resultBean);
             return resultBean;
         }
 
@@ -284,7 +284,7 @@ public class FaceAddController {
                 resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_INFOBYIMAGE);
                 resultBean.setData("");
                 resultBean.setMsg(ResultConstant.MSG_COMMON_DATABASE_ERE);
-                logger.info(JsonUtils.obj2Json(resultBean));
+                logger.info(resultBean);
                 return resultBean;
             }
             HttpClientUtils httpClientUtils = new HttpClientUtils();
@@ -321,10 +321,10 @@ public class FaceAddController {
             resultBean.setCode(CodeConstant.CODE_MOUDLE_FACE + CodeConstant.CODE_FACE_INFOBYIMAGE);
             resultBean.setData("");
             resultBean.setMsg(ResultConstant.MSG_COMMON_DATABASE_ERE);
-            logger.info(JsonUtils.obj2Json(resultBean));
+            logger.info(resultBean);
             return resultBean;
         }
-        logger.info(JsonUtils.obj2Json(resultBean));
+        logger.info(resultBean);
         return resultBean;
     }
 
