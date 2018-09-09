@@ -25,6 +25,7 @@ public class RedisOperationService {
 
     /**
      * 初始化
+     *
      * @throws Exception
      */
     public RedisOperationService() throws Exception {
@@ -37,16 +38,16 @@ public class RedisOperationService {
             for (RedisConf redis : redisConfList
                     ) {
                 Pattern patternUrl = Pattern.compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+$");
-                Pattern patternIP = Pattern.compile("([1-9]|[1-9]\\\\d|1\\\\d{2}|2[0-4]\\\\d|25[0-5])(\\\\.(\\\\d|[1-9]\\\\d|1\\\\d{2}|2[0-4]\\\\d|25[0-5])){3}");
+                Pattern patternIP = Pattern.compile("(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))");
                 if (!patternUrl.matcher(redis.getAddIP()).find() && !patternIP.matcher(redis.getAddIP()).find())
                     continue;
                 if (redis.getPort() == null) continue;
                 bHasRedis = true;
                 JedisShardInfo jedisShardInfo = new JedisShardInfo(redis.getAddIP(), Integer.parseInt(String.valueOf(redis.getPort())));
-                if (redisConf.getAuthPwd() != null) jedisShardInfo.setPassword(redis.getAuthPwd());
+                if (redis.getAuthPwd() != null) jedisShardInfo.setPassword(redis.getAuthPwd());
                 jedisShardInfoList.add(jedisShardInfo);
             }
-            if(bHasRedis){
+            if (bHasRedis) {
                 redisUtils = new RedisUtils(jedisShardInfoList);
             }
         }
@@ -54,51 +55,56 @@ public class RedisOperationService {
 
     /**
      * token 添加到redis
+     *
      * @param sAccId
      * @param sToken
      * @return
      */
-    public boolean addNewToken(String sAccId, String sToken){
+    public boolean addNewToken(String sAccId, String sToken) {
         if (!bHasRedis) return false;
         return redisUtils.add(sToken, sAccId);
     }
 
     /**
      * 通过token获取账户Id
+     *
      * @param sToken
      * @return
      */
-    public String getAccFromToken(String sToken){
-        if(!bHasRedis) return "";
+    public String getAccFromToken(String sToken) {
+        if (!bHasRedis) return "";
         return redisUtils.get(sToken, String.class);
     }
 
     /**
      * 设置token超时时间
+     *
      * @param sToken
      * @param lTime
      * @return
      */
-    public Long setTokenTime(String sToken, int lTime){
-        if(!bHasRedis) return -1L;
+    public Long setTokenTime(String sToken, int lTime) {
+        if (!bHasRedis) return -1L;
         return redisUtils.expire(sToken, lTime);
     }
 
     /**
      * 验证token是否存在
+     *
      * @param sToken
      * @return
      */
-    public boolean exitToken(String sToken){
-        if(!bHasRedis) return false;
+    public boolean exitToken(String sToken) {
+        if (!bHasRedis) return false;
         return redisUtils.exist(sToken);
     }
 
     /**
      * 销毁
      */
-    public void destroy(){
-        redisUtils.destroy();
+    public void destroy() {
+        if (redisUtils != null)
+            redisUtils.destroy();
         redisConfService = null;
     }
 }

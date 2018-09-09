@@ -20,6 +20,8 @@
         </dependency>
     </dependencies>
 
-
+    <build>
+        <finalName>video</finalName>
+    </build>
 
 </project>

@@ -1,9 +1,6 @@
 package com.merelyb.data;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.merelyb.bean.dataConf.DataConf;
 import com.merelyb.utils.database.JDBCUtils;
 import org.json.JSONObject;
@@ -30,9 +27,10 @@ public class DataBaseOperation<T> {
 
     /**
      * 初始化
+     *
      * @param dataConf
      */
-    public DataBaseOperation(DataConf dataConf){
+    public DataBaseOperation(DataConf dataConf) {
         sConnection = dataConf.getConnection();
         iType = dataConf.getDataType();
         properties = new Properties();
@@ -43,6 +41,7 @@ public class DataBaseOperation<T> {
 
     /**
      * 查询语句
+     *
      * @param sSQL
      * @return
      * @throws Exception
@@ -51,8 +50,12 @@ public class DataBaseOperation<T> {
         List<T> list = new ArrayList<T>();
         JDBCUtils jdbcUtils = new JDBCUtils(iType, sConnection, properties);
         List<JSONObject> jsonObjectList = jdbcUtils.select(sSQL);
-        if(jsonObjectList.size() > 0) {
-            Gson gson = new Gson();
+        if (jsonObjectList.size() > 0) {
+            Gson gson = new GsonBuilder()
+                    .disableHtmlEscaping()
+                    .serializeSpecialFloatingPointValues()
+                    .setDateFormat("yyyy-MM-dd HH:mm:ss")//日期时间格式
+                    .create();
             JsonArray jsonArray = new JsonParser().parse(jsonObjectList.toString()).getAsJsonArray();
             for (JsonElement jsonElement : jsonArray) {
                 list.add(gson.fromJson(jsonElement, clsT));
@@ -63,11 +66,12 @@ public class DataBaseOperation<T> {
 
     /**
      * 增加、更新、删除通用执行sql
+     *
      * @param sSQL
      * @return
      * @throws Exception
      */
-    public int insertAndUpdateAndDelete(String sSQL) throws Exception{
+    public int insertAndUpdateAndDelete(String sSQL) throws Exception {
         JDBCUtils jdbcUtils = new JDBCUtils(iType, sConnection, properties);
         return jdbcUtils.insertAndUpdateAndDelete(sSQL);
     }

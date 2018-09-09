@@ -7,6 +7,7 @@ import com.merelyb.constant.RequestConstant;
 import com.merelyb.constant.ResultConstant;
 import com.merelyb.service.redis.RedisOperationService;
 import com.merelyb.service.relation.RelationVideoInfoService;
+import com.merelyb.utils.json.JsonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -135,7 +136,7 @@ public class AccVideoRelationController {
 
                 resultBean.setStatus(true);
                 resultBean.setCode(CodeConstant.CODE_MOUDLE_RELATION + CodeConstant.CODE_RELATION_GETVIDEO);
-                resultBean.setData(accVideoList);
+                resultBean.setData(JsonUtils.objs2Json(accVideoList));
                 resultBean.setMsg(ResultConstant.MSG_COMMON_SUCCESS);
                 logger.info(resultBean);
             } catch (Exception e) {

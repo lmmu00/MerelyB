@@ -15,7 +15,7 @@ public class ResultBean {
     //错误
     private String msg;
     //数据
-    private Object data;
+    private String data;
 
     public boolean getStatus() {
         return status;
@@ -41,11 +41,11 @@ public class ResultBean {
         this.msg = msg;
     }
 
-    public Object getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(String data) {
         this.data = data;
     }
 }

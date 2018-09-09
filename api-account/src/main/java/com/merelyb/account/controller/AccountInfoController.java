@@ -135,6 +135,7 @@ public class AccountInfoController {
         AccInfo accInfo = new AccInfo();
         accInfo.setAccUser(sUser);
         accInfo.setIsDelete((byte) 0);
+        RedisOperationService redisOperationService = null;
         try {
             AccountInfoService accountInfoService = new AccountInfoService();
             List<AccInfo> accInfoList = accountInfoService.select(accInfo);
@@ -160,7 +161,7 @@ public class AccountInfoController {
             }
             //token 放到redis
             String sToken = cryptUtils.DecryptBase64(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + String.valueOf(accInfo.getAccId()));
-            RedisOperationService redisOperationService = new RedisOperationService();
+            redisOperationService = new RedisOperationService();
             redisOperationService.addNewToken(String.valueOf(accInfo.getAccId()), sToken);
             redisOperationService.setTokenTime(sToken, RequestConstant.ITOKENVAILD);
             redisOperationService.destroy();
@@ -170,6 +171,7 @@ public class AccountInfoController {
             resultBean.setData(sToken); //需添加token
             resultBean.setMsg(ResultConstant.MSG_COMMON_SUCCESS);
         } catch (Exception e) {
+            if(redisOperationService != null) redisOperationService.destroy();
             e.printStackTrace();
             resultBean.setStatus(false);
             resultBean.setCode(CodeConstant.CODE_MOUDLE_ACCOUNT + CodeConstant.CODE_ACCOUNT_LOGIN);
