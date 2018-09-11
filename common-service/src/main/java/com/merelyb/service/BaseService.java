@@ -40,7 +40,8 @@ public class BaseService<T> {
         if(httpClientResult.isSuccessed()){
             ResultBean resultBean = JsonUtils.json2Obj(httpClientResult.getData(), ResultBean.class);
             if(resultBean.getStatus() == true){
-                List<DataConf> dataConfList = JsonUtils.json2Objs(resultBean.getData(), new TypeToken<List<DataConf>>(){});
+                String sData = (String)resultBean.getData();
+                List<DataConf> dataConfList = JsonUtils.json2Objs(sData, new TypeToken<List<DataConf>>(){});
                 if(dataConfList.size() > 0){
                     dataConf = (DataConf) dataConfList.get(0);
                 }

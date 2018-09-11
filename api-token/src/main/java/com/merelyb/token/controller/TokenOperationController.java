@@ -10,6 +10,7 @@ import com.merelyb.service.redis.RedisOperationService;
 import com.merelyb.utils.json.JsonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +27,7 @@ import java.util.Map;
  * @创建时间: 2018-09-11 10:57
  * @Description: ${Description}
  */
+@Controller
 @RequestMapping(value = "token")
 public class TokenOperationController {
 
