@@ -19,6 +19,7 @@ public class CodeConstant {
     public final static String CODE_MOUDLE_FACE = "1002";
     public final static String CODE_MOUDLE_VIDEO = "1003";
     public final static String CODE_MOUDLE_RELATION = "1004";
+    public final static String CODE_MOUDLE_TOKEN ="1005";
 
 
 
@@ -35,4 +36,5 @@ public class CodeConstant {
     public final static String CODE_RELATION_NEWVIDEO = "0010";
     public final static String CODE_RELATION_GETVIDEO = "0011";
     public final static String CODE_RELATION_DELVIDEO = "0012";
+    public final static String CODE_TOKEN_GETUSERINFO = "0013";
 }

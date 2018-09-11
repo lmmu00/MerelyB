@@ -1,5 +1,7 @@
 package com.merelyb.constant;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 /**
  * @项目: Merelyb
  * @包: com.merelyb.constant
@@ -16,6 +18,9 @@ public class RequestConstant {
     public final static String ACCOUNT_ADDACC_PWD = "pwd";
 
     public final static String REQUEST_TOKEN = "sstk";
+    public final static String USERINFO_NAME = "uName";
+    public final static String USERINFO_ID ="uId";
+    public final static String USERINFO_ACCESS = "uAccess";
 
     public final static String REQUEST_REMARK = "remark";
     public final static String REQUEST_VIDEOURL = "videoUrl";

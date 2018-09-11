@@ -16,6 +16,7 @@
         <module>api-face</module>
         <module>api-relation</module>
         <module>common-preparation</module>
+        <module>api-token</module>
     </modules>
     <packaging>pom</packaging>
 

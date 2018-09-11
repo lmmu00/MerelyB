@@ -5,7 +5,9 @@ import com.merelyb.utils.database.RedisUtils;
 import redis.clients.jedis.JedisShardInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -56,24 +58,31 @@ public class RedisOperationService {
     /**
      * token 添加到redis
      *
-     * @param sAccId
+     * @param mapValue
      * @param sToken
      * @return
      */
-    public boolean addNewToken(String sAccId, String sToken) {
+    public boolean addNewToken(Map<String, String> mapValue, String sToken) {
         if (!bHasRedis) return false;
-        return redisUtils.add(sToken, sAccId);
+        return redisUtils.hashAdd(sToken, mapValue);
     }
 
     /**
-     * 通过token获取账户Id
+     * 通过token获取账户信息
      *
      * @param sToken
      * @return
      */
-    public String getAccFromToken(String sToken) {
-        if (!bHasRedis) return "";
-        return redisUtils.get(sToken, String.class);
+    public Map<String, String> getAccFromToken(String sToken) {
+        if (!bHasRedis) return null;
+        List<String> list = redisUtils.hashGetAllMapKeys(sToken);
+        if(list == null || list.size() == 0) return null;
+        Map<String, String> mapResult = new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            String sKey = list.get(i);
+            mapResult.put(sKey, redisUtils.hashGetValue(sToken, sKey, String.class));
+        }
+        return mapResult;
     }
 
     /**

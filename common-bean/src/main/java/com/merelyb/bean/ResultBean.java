@@ -7,7 +7,7 @@ package com.merelyb.bean;
  * @创建时间: 2018-08-01 14:06
  * @Description: 返回结果bean
  */
-public class ResultBean {
+public class ResultBean <T>{
     //成功状态
     private boolean status;
     //接口编码
@@ -15,7 +15,7 @@ public class ResultBean {
     //错误
     private String msg;
     //数据
-    private String data;
+    private T data;
 
     public boolean getStatus() {
         return status;
@@ -41,11 +41,11 @@ public class ResultBean {
         this.msg = msg;
     }
 
-    public String getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @项目: Merelyb
@@ -162,7 +161,14 @@ public class AccountInfoController {
             //token 放到redis
             String sToken = cryptUtils.DecryptBase64(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + String.valueOf(accInfo.getAccId()));
             redisOperationService = new RedisOperationService();
-            redisOperationService.addNewToken(String.valueOf(accInfo.getAccId()), sToken);
+            //权限添加
+            List<String> roleList = new ArrayList<>();
+            roleList.add(accInfo.getAccUser());
+            Map<String, String> mapValue = new HashMap<>();
+            mapValue.put(RequestConstant.USERINFO_NAME, accInfo.getAccUser());
+            mapValue.put(RequestConstant.USERINFO_ACCESS, JsonUtils.obj2Json(roleList));
+            mapValue.put(RequestConstant.USERINFO_ID, String.valueOf(accInfo.getAccId()));
+            redisOperationService.addNewToken(mapValue, sToken);
             redisOperationService.setTokenTime(sToken, RequestConstant.ITOKENVAILD);
             redisOperationService.destroy();
 
