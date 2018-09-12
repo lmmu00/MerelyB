@@ -2,6 +2,7 @@ package com.merelyb.account.controller;
 
 import com.merelyb.bean.acc.AccInfo;
 import com.merelyb.bean.ResultBean;
+import com.merelyb.bean.centre.UserInfo;
 import com.merelyb.constant.CodeConstant;
 import com.merelyb.constant.RequestConstant;
 import com.merelyb.constant.ResultConstant;
@@ -164,11 +165,11 @@ public class AccountInfoController {
             //权限添加
             List<String> roleList = new ArrayList<>();
             roleList.add(accInfo.getAccUser());
-            Map<String, String> mapValue = new HashMap<>();
-            mapValue.put(RequestConstant.USERINFO_NAME, accInfo.getAccUser());
-            mapValue.put(RequestConstant.USERINFO_ACCESS, JsonUtils.obj2Json(roleList));
-            mapValue.put(RequestConstant.USERINFO_ID, String.valueOf(accInfo.getAccId()));
-            redisOperationService.addNewToken(mapValue, sToken);
+            UserInfo userInfo = new UserInfo();
+            userInfo.setAccess(roleList);
+            userInfo.setUserName(accInfo.getAccUser());
+            userInfo.setUserId(String.valueOf(accInfo.getAccId()));
+            redisOperationService.addNewToken(JsonUtils.obj2Json(userInfo), sToken);
             redisOperationService.setTokenTime(sToken, RequestConstant.ITOKENVAILD);
             redisOperationService.destroy();
 

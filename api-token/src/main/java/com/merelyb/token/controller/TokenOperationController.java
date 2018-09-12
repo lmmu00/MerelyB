@@ -1,6 +1,5 @@
 package com.merelyb.token.controller;
 
-import com.google.gson.reflect.TypeToken;
 import com.merelyb.bean.ResultBean;
 import com.merelyb.bean.centre.UserInfo;
 import com.merelyb.constant.CodeConstant;
@@ -16,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @项目: Merelyb
@@ -60,16 +56,19 @@ public class TokenOperationController {
                     resultBean.setCode(CodeConstant.CODE_MOUDLE_TOKEN + CodeConstant.CODE_TOKEN_GETUSERINFO);
                     resultBean.setMsg(ResultConstant.MSG_TOKEN_ERR);
                 } else {
-                    Map<String, String> mapValue = redisOperationService.getAccFromToken(sToken);
-                    UserInfo userInfo = new UserInfo();
-                    userInfo.setUserId(mapValue.containsKey(RequestConstant.USERINFO_ID) ? mapValue.get(RequestConstant.USERINFO_ID) : "");
-                    userInfo.setUserName(mapValue.containsKey(RequestConstant.USERINFO_NAME) ? mapValue.get(RequestConstant.USERINFO_NAME) : "");
-                    userInfo.setAccess(mapValue.containsKey(RequestConstant.USERINFO_ACCESS) ? JsonUtils.json2Objs(mapValue.get(RequestConstant.USERINFO_ID), new TypeToken<List<String>>() {
-                    }) : new ArrayList<String>());
-                    resultBean.setStatus(true);
-                    resultBean.setData(userInfo);
-                    resultBean.setCode(CodeConstant.CODE_MOUDLE_TOKEN + CodeConstant.CODE_TOKEN_GETUSERINFO);
-                    resultBean.setMsg("");
+                    String sValue = redisOperationService.getAccFromToken(sToken);
+                    UserInfo userInfo = JsonUtils.json2Obj(sValue, UserInfo.class);
+                    if(userInfo == null){
+                        resultBean.setStatus(false);
+                        resultBean.setData("");
+                        resultBean.setCode(CodeConstant.CODE_MOUDLE_TOKEN + CodeConstant.CODE_TOKEN_GETUSERINFO);
+                        resultBean.setMsg(ResultConstant.MSG_TOKEN_ERR);
+                    }else {
+                        resultBean.setStatus(true);
+                        resultBean.setData(JsonUtils.obj2Json(userInfo));
+                        resultBean.setCode(CodeConstant.CODE_MOUDLE_TOKEN + CodeConstant.CODE_TOKEN_GETUSERINFO);
+                        resultBean.setMsg("");
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -58,13 +58,13 @@ public class RedisOperationService {
     /**
      * token 添加到redis
      *
-     * @param mapValue
+     * @param sValue
      * @param sToken
      * @return
      */
-    public boolean addNewToken(Map<String, String> mapValue, String sToken) {
+    public boolean addNewToken(String sValue, String sToken) {
         if (!bHasRedis) return false;
-        return redisUtils.hashAdd(sToken, mapValue);
+        return redisUtils.add(sToken, sValue);
     }
 
     /**
@@ -73,16 +73,9 @@ public class RedisOperationService {
      * @param sToken
      * @return
      */
-    public Map<String, String> getAccFromToken(String sToken) {
+    public String getAccFromToken(String sToken) {
         if (!bHasRedis) return null;
-        List<String> list = redisUtils.hashGetAllMapKeys(sToken);
-        if(list == null || list.size() == 0) return null;
-        Map<String, String> mapResult = new HashMap<>();
-        for (int i = 0; i < list.size(); i++) {
-            String sKey = list.get(i);
-            mapResult.put(sKey, redisUtils.hashGetValue(sToken, sKey, String.class));
-        }
-        return mapResult;
+        return redisUtils.get(sToken, String.class);
     }
 
     /**
