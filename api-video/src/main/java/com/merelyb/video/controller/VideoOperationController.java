@@ -3,6 +3,7 @@ package com.merelyb.video.controller;
 import com.merelyb.bean.ResultBean;
 import com.merelyb.constant.CodeConstant;
 import com.merelyb.constant.ResultConstant;
+import com.merelyb.service.videosearch.YoukuVideoSearchService;
 import com.merelyb.utils.json.JsonUtils;
 import com.merelyb.video.bean.FilePath;
 import org.apache.logging.log4j.LogManager;
@@ -151,6 +152,15 @@ public class VideoOperationController {
             return resultBean;
         }
 
+        return resultBean;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "searchVideo")
+    @ResponseBody
+    public ResultBean getVideoInfo(){
+        ResultBean resultBean = new ResultBean();
+        YoukuVideoSearchService youkuVideoSearchService = new YoukuVideoSearchService();
+        youkuVideoSearchService.getVideoInfo("");
         return resultBean;
     }
 
